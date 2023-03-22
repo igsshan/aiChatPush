@@ -1,11 +1,9 @@
-import os
+import datetime
 import math
+import os
 import random
-import requests
 
-from datetime import date, datetime
-from wechatpy import WeChatClient
-from wechatpy.client.api import WeChatMessage, WeChatTemplate
+import requests as requests
 
 today = datetime.now()
 
@@ -17,7 +15,7 @@ app_secret = os.environ["APP_SECRET"]
 user_ids = os.environ["USER_ID"].split(',')
 template_ids = os.environ["TEMPLATE_ID"].split(',')
 citys = os.environ["CITY"].split(',')
-solarys = os.environ["SOLARY"].split(',')
+salarys = os.environ["SALARY"].split(',')
 start_dates = os.environ["START_DATE"].split(',')
 birthdays = os.environ["BIRTHDAY"].split(',')
 
@@ -42,8 +40,8 @@ def get_count(start_date):
 
 
 # 距离发工资还有多少天
-def get_solary(solary):
-    next = datetime.strptime(str(date.today().year) + "-" + str(date.today().month) + "-" + solary, "%Y-%m-%d")
+def get_salary(salary):
+    next = datetime.strptime(str(datetime.date.today().year) + "-" + str(datetime.date.today().month) + "-" + salary, "%Y-%m-%d")
     if next < datetime.now():
         if next.month == 12:
             next = next.replace(year=next.year + 1)
@@ -53,7 +51,7 @@ def get_solary(solary):
 
 # 距离过生日还有多少天
 def get_birthday(birthday):
-    next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
+    next = datetime.strptime(str(datetime.date.today().year) + "-" + birthday, "%Y-%m-%d")
     if next < datetime.now():
         next = next.replace(year=next.year + 1)
     return (next - today).days
@@ -85,12 +83,12 @@ for i in range(len(user_ids)):
         "temperature": {"value": "当前温度：{}".format(tem), "color": get_random_color()},
         "love_days": {"value": "今天是你们在一起的第{}天".format(get_count(start_dates[i])), "color": get_random_color()},
         "birthday_left": {"value": "距离她的生日还有{}天".format(get_birthday(birthdays[i])), "color": get_random_color()},
-        "solary": {"value": "距离发工资还有{}天".format(get_solary(solarys[i])), "color": get_random_color()},
+        "salary": {"value": "距离发工资还有{}天".format(get_salary(salarys[i])), "color": get_random_color()},
         "words": {"value": get_words(), "color": get_random_color()}
     }
     if get_birthday(birthdays[i]) == 0:
         data["birthday_left"]['value'] = "今天是她的生日哦，快去一起甜蜜吧"
-    if get_solary(solarys[i]) == 0:
-        data["solary"]['value'] = "今天发工资啦，快去犒劳一下自己吧"
+    if get_salary(salarys[i]) == 0:
+        data["salary"]['value'] = "今天发工资啦，快去犒劳一下自己吧"
     res = wm.send_template(user_ids[i], template_ids[i], data)
     print(res)

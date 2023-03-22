@@ -1,0 +1,31 @@
+name: drink water
+
+on:
+  schedule:
+    - cron: '0 1,2,3,4,6,7,8,9,10,12 * * *'
+  workflow_dispatch:
+
+jobs:
+  send_message:
+    runs-on: ubuntu-latest
+    name: Remind yourself to drink eight glasses of water a day
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          ref: master
+
+      - name: sender
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - run: pip install -r ./requirements.txt && python ./water.py
+
+    env:
+      APP_ID: ${{ secrets.APP_ID }}
+      APP_SECRET: ${{ secrets.APP_SECRET }}
+      USER_ID: ${{ secrets.USER_ID }}
+      TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
