@@ -11,7 +11,7 @@ app_id = os.environ["APP_ID"]
 app_secret = os.environ["APP_SECRET"]
 
 user_ids = os.environ["USER_ID"].split(',')
-template_id = os.environ["WATER_TEMPLATE_ID"]
+template_id = os.environ["TEMPLATE_ID"]
 
 
 def get_push_content():
